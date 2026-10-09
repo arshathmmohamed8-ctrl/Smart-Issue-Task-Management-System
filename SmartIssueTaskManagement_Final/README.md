@@ -2,7 +2,7 @@
 
 A Java-based console application designed to manage tasks, projects, and issues efficiently. This project demonstrates object-oriented programming, service-layer logic, input validation, and basic project management workflows.
 
-## 🚀 Features
+##  Features
 
 ### Task Management
 - Create, view, search, update, and delete tasks
@@ -25,7 +25,7 @@ A Java-based console application designed to manage tasks, projects, and issues 
 - Track issue creation dates
 - Validate issue details and duplicate IDs
 
-## 🛠️ Technologies Used
+##  Technologies Used
 
 - **Language:** Java
 - **Concepts:** Object-Oriented Programming (OOP), Collections, Enums, Exception Handling
@@ -34,7 +34,7 @@ A Java-based console application designed to manage tasks, projects, and issues 
 - **IDE:** IntelliJ IDEA
 - **Version Control:** Git and GitHub
 
-## 📂 Project Structure
+##  Project Structure
 
 ```text
 SmartIssueTaskManagement/
@@ -54,7 +54,7 @@ SmartIssueTaskManagement/
                         └── TaskMenu.java
 ```
 
-## ⚙️ Getting Started
+##  Getting Started
 
 ### Prerequisites
 - JDK 17 or later
@@ -75,7 +75,7 @@ SmartIssueTaskManagement/
 5. Run `Main.java`.
 6. Use the console menu to manage tasks, projects, and issues.
 
-## 🧪 Example Workflow
+##  Example Workflow
 
 1. Create a task with a title, description, priority, status, and deadline.
 2. View or search for the task.
@@ -83,13 +83,13 @@ SmartIssueTaskManagement/
 4. Create an issue and update its status.
 5. Filter tasks or issues based on priority and status.
 
-## ⚠️ Current Limitations
+##  Current Limitations
 
 - Data is stored in memory and is lost when the application exits.
 - The application currently uses a console-based interface.
 - Database persistence, REST APIs, authentication, and a web frontend are not included in this version.
 
-## 🔮 Future Enhancements
+##  Future Enhancements
 
 - Migrate the application to **Spring Boot**
 - Build RESTful APIs for tasks, projects, and issues
@@ -99,11 +99,11 @@ SmartIssueTaskManagement/
 - Add API testing, documentation, and deployment
 - Build a web frontend using React
 
-## 🎯 Project Objective
+##  Project Objective
 
 The goal of this project is to build a foundation in Java application development and evolve it into a full-stack project management system with a professional backend architecture.
 
-## 👨‍💻 Author
+##  Author
 
 **Mohamed Arshath**
 
