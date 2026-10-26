@@ -1,0 +1,28 @@
+# Java and build output
+*.class
+*.jar
+!**/gradle/wrapper/gradle-wrapper.jar
+**/build/
+**/target/
+.gradle/
+**/.gradle/
+
+# IDE and editor files
+.idea/
+**/.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+
+# Logs and crash dumps
+*.log
+startup-log.txt
+hs_err_pid*
+
+# Local environment and secret configuration
+.env
+.env.*
+!.env.example
+**/application-local.properties
+**/application-*.local.properties

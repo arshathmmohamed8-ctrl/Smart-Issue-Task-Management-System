@@ -1,0 +1,246 @@
+@baseUrl = http://localhost:8080
+
+### Read-only: list projects
+GET {{baseUrl}}/api/projects
+
+### Read-only: get an existing project
+GET {{baseUrl}}/api/projects/1
+
+### Read-only: project not found
+GET {{baseUrl}}/api/projects/999999
+
+### Read-only: list tasks
+GET {{baseUrl}}/api/tasks
+
+### Read-only: get an existing task
+GET {{baseUrl}}/api/tasks/1
+
+### Read-only: filter tasks by status and priority
+GET {{baseUrl}}/api/tasks?status=PENDING&priority=HIGH
+
+### Read-only: task not found
+GET {{baseUrl}}/api/tasks/999999
+
+### Read-only: list issues
+GET {{baseUrl}}/api/issues
+
+### Read-only: get an existing issue
+GET {{baseUrl}}/api/issues/1
+
+### Read-only: issue not found
+GET {{baseUrl}}/api/issues/999999
+
+### Read-only: list assignments for a project
+GET {{baseUrl}}/api/project-tasks/projects/1
+
+### Read-only: get the assignment for a task
+GET {{baseUrl}}/api/project-tasks/tasks/1
+
+### Read-only: project does not exist
+GET {{baseUrl}}/api/project-tasks/projects/999999
+
+### Read-only: existing task 2 has no assignment
+GET {{baseUrl}}/api/project-tasks/tasks/2
+
+### Read-only: invalid project ID
+GET {{baseUrl}}/api/project-tasks/projects/0
+
+### Read-only: invalid task ID
+GET {{baseUrl}}/api/project-tasks/tasks/-1
+
+### WRITE TESTS
+# Before sending any write request, verify its ID is unused with the matching GET route.
+# The IDs below are examples reserved for dedicated test data, not production records.
+# Never change or delete existing projects 1, 100, or 101.
+
+@testProjectId = 900102
+@testTaskId = 900203
+@testTaskIdForProjectDelete = 900204
+@testIssueId = 900302
+
+### Create a dedicated test project (POST; verify ID is unused first)
+POST {{baseUrl}}/api/projects
+Content-Type: application/json
+
+{
+  "id": {{testProjectId}},
+  "name": "REST_TEST_PROJECT",
+  "description": "Dedicated REST CRUD test project"
+}
+
+### Read the dedicated test project
+GET {{baseUrl}}/api/projects/{{testProjectId}}
+
+### Update only the dedicated test project (PUT; create it first)
+PUT {{baseUrl}}/api/projects/{{testProjectId}}
+Content-Type: application/json
+
+{
+  "name": "REST_TEST_PROJECT_UPDATED",
+  "description": "Updated dedicated REST CRUD test project"
+}
+
+### Verify the dedicated project update
+GET {{baseUrl}}/api/projects/{{testProjectId}}
+
+### Create a dedicated test task (POST; verify ID is unused first)
+POST {{baseUrl}}/api/tasks
+Content-Type: application/json
+
+{
+  "id": {{testTaskId}},
+  "title": "REST_TEST_TASK",
+  "description": "Dedicated REST CRUD test task",
+  "priority": "MEDIUM",
+  "status": "PENDING",
+  "deadline": "2030-01-01"
+}
+
+### Read the dedicated test task
+GET {{baseUrl}}/api/tasks/{{testTaskId}}
+
+### Update only the dedicated test task (PUT; create it first)
+PUT {{baseUrl}}/api/tasks/{{testTaskId}}
+Content-Type: application/json
+
+{
+  "title": "REST_TEST_TASK_UPDATED",
+  "description": "Updated dedicated REST CRUD test task",
+  "priority": "HIGH",
+  "status": "IN_PROGRESS",
+  "deadline": "2030-02-01"
+}
+
+### Verify the dedicated task update
+GET {{baseUrl}}/api/tasks/{{testTaskId}}
+
+### Create a second task to verify project deletion preserves unrelated task data
+POST {{baseUrl}}/api/tasks
+Content-Type: application/json
+
+{
+  "id": {{testTaskIdForProjectDelete}},
+  "title": "REST_TEST_TASK_PROJECT_DELETE",
+  "description": "Must remain after its test project is deleted",
+  "priority": "LOW",
+  "status": "PENDING",
+  "deadline": "2030-03-01"
+}
+
+### Create a dedicated test issue (POST; verify ID is unused first)
+POST {{baseUrl}}/api/issues
+Content-Type: application/json
+
+{
+  "id": {{testIssueId}},
+  "title": "REST_TEST_ISSUE",
+  "description": "Dedicated REST CRUD test issue",
+  "priority": "MEDIUM",
+  "status": "OPEN"
+}
+
+### Read the dedicated test issue
+GET {{baseUrl}}/api/issues/{{testIssueId}}
+
+### Update only the dedicated test issue (PUT; create it first)
+PUT {{baseUrl}}/api/issues/{{testIssueId}}
+Content-Type: application/json
+
+{
+  "title": "REST_TEST_ISSUE_UPDATED",
+  "description": "Updated dedicated REST CRUD test issue",
+  "priority": "HIGH",
+  "status": "IN_PROGRESS"
+}
+
+### Verify the dedicated issue update
+GET {{baseUrl}}/api/issues/{{testIssueId}}
+
+### Verify assignment to a task already assigned to project 1 returns conflict
+PUT {{baseUrl}}/api/project-tasks/projects/{{testProjectId}}/tasks/1
+
+### Assign the dedicated test task to the dedicated test project (create both first)
+PUT {{baseUrl}}/api/project-tasks/projects/{{testProjectId}}/tasks/{{testTaskId}}
+
+### Read the dedicated task's assignment
+GET {{baseUrl}}/api/project-tasks/tasks/{{testTaskId}}
+
+### Read the dedicated project's assignments
+GET {{baseUrl}}/api/project-tasks/projects/{{testProjectId}}
+
+### Remove only the dedicated test assignment (DELETE; verify it is the test assignment first)
+DELETE {{baseUrl}}/api/project-tasks/projects/{{testProjectId}}/tasks/{{testTaskId}}
+
+### Verify the dedicated assignment was removed
+GET {{baseUrl}}/api/project-tasks/tasks/{{testTaskId}}
+
+### Reassign the dedicated test task to verify task deletion removes its assignment
+PUT {{baseUrl}}/api/project-tasks/projects/{{testProjectId}}/tasks/{{testTaskId}}
+
+### Delete only the dedicated test task (DELETE; verify its ID and title first)
+DELETE {{baseUrl}}/api/tasks/{{testTaskId}}
+
+### Verify task deletion also removed its assignment
+GET {{baseUrl}}/api/project-tasks/tasks/{{testTaskId}}
+
+### Assign the second dedicated task before project-delete verification
+PUT {{baseUrl}}/api/project-tasks/projects/{{testProjectId}}/tasks/{{testTaskIdForProjectDelete}}
+
+### Delete only the dedicated test issue (DELETE; verify its ID and title first)
+DELETE {{baseUrl}}/api/issues/{{testIssueId}}
+
+### Verify issue deletion
+GET {{baseUrl}}/api/issues/{{testIssueId}}
+
+### Delete only the dedicated test project (DELETE; verify its ID and name first)
+# ProjectService removes this project's assignment rows before deleting the project.
+# The dedicated test task remains and must still be readable afterward.
+DELETE {{baseUrl}}/api/projects/{{testProjectId}}
+
+### Verify project deletion and its assignment cleanup
+GET {{baseUrl}}/api/projects/{{testProjectId}}
+
+### Verify project deletion preserved the dedicated task but removed its assignment
+GET {{baseUrl}}/api/tasks/{{testTaskIdForProjectDelete}}
+
+### Verify project deletion removed only its assignment
+GET {{baseUrl}}/api/project-tasks/tasks/{{testTaskIdForProjectDelete}}
+
+### Delete the remaining dedicated test task after confirming project deletion preserved it
+DELETE {{baseUrl}}/api/tasks/{{testTaskIdForProjectDelete}}
+
+### Validation test: project name is required (does not create a record)
+POST {{baseUrl}}/api/projects
+Content-Type: application/json
+
+{
+  "id": 900199,
+  "name": null,
+  "description": "Expected validation failure"
+}
+
+### Validation test: task priority and status are required (does not create a record)
+POST {{baseUrl}}/api/tasks
+Content-Type: application/json
+
+{
+  "id": 900299,
+  "title": "INVALID_TEST_TASK",
+  "description": "Expected validation failure"
+}
+
+### Validation test: issue priority and status are required (does not create a record)
+POST {{baseUrl}}/api/issues
+Content-Type: application/json
+
+{
+  "id": 900399,
+  "title": "INVALID_TEST_ISSUE",
+  "description": "Expected validation failure"
+}
+
+### Invalid reference: nonexistent project; task 2 is an existing unassigned task
+PUT {{baseUrl}}/api/project-tasks/projects/999999/tasks/2
+
+### Invalid reference: nonexistent task; project 1 is an existing project
+PUT {{baseUrl}}/api/project-tasks/projects/1/tasks/999999
