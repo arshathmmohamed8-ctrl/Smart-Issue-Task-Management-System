@@ -1,7 +1,8 @@
-export const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8081').replace(/\/$/, '');
+export const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8081').trim().replace(/\/$/, '');
 
 async function request(path, options = {}) {
   const headers = new Headers(options.headers || {});
+  const finalPath = path.startsWith('/') ? path : `/${path}`;
   const isJsonBody = options.body && !(options.body instanceof FormData) && !headers.has('Content-Type');
 
   if (isJsonBody) {
@@ -10,11 +11,12 @@ async function request(path, options = {}) {
 
   const requestConfig = {
     ...options,
+    method: (options.method || 'GET').toUpperCase(),
     headers,
     credentials: 'include',
   };
 
-  const response = await fetch(`${API_BASE_URL}${path}`, requestConfig);
+  const response = await fetch(`${API_BASE_URL}${finalPath}`, requestConfig);
 
   const contentType = response.headers.get('content-type') || '';
   const hasJsonBody = contentType.includes('application/json');
@@ -38,7 +40,7 @@ async function request(path, options = {}) {
       }
     }
 
-    console.error('API request failed:', path, response.status, message);
+    console.error('API request failed:', finalPath, response.status, message);
     const error = new Error(message);
     error.status = response.status;
     throw error;

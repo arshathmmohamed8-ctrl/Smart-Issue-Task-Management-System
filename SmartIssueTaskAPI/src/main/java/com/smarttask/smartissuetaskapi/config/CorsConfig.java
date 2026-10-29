@@ -14,13 +14,14 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/api/**")
-                        .allowedOrigins(
+                        .allowedOriginPatterns(
+                                "http://localhost:5173",
+                                "http://localhost:3000",
                                 "https://smart-issue-task-frontend.vercel.app"
                         )
-                        .allowedMethods(
-                                "GET", "POST", "PUT", "DELETE", "OPTIONS"
-                        )
+                        .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
+                        .allowCredentials(true)
                         .maxAge(3600);
             }
         };
