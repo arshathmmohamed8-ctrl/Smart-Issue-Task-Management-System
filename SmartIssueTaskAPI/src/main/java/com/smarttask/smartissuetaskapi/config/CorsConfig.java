@@ -17,9 +17,12 @@ public class CorsConfig {
                         .allowedOriginPatterns(
                                 "http://localhost:5173",
                                 "http://localhost:3000",
-                                "https://smart-issue-task-frontend.vercel.app"
+                                "http://127.0.0.1:5173",
+                                "http://127.0.0.1:3000",
+                                "https://smart-issue-task-frontend.vercel.app",
+                                "https://*.vercel.app"
                         )
-                        .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+                        .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD")
                         .allowedHeaders("*")
                         .allowCredentials(true)
                         .maxAge(3600);

@@ -1,4 +1,15 @@
-export const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8081').trim().replace(/\/$/, '');
+const getDefaultApiBaseUrl = () => {
+  if (typeof window !== 'undefined') {
+    const host = window.location.hostname;
+    if (host === 'localhost' || host === '127.0.0.1') {
+      return 'http://localhost:8081';
+    }
+  }
+
+  return 'https://smart-issue-task-api.onrender.com';
+};
+
+export const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || getDefaultApiBaseUrl()).trim().replace(/\/$/, '');
 
 async function request(path, options = {}) {
   const headers = new Headers(options.headers || {});
